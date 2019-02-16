@@ -2,6 +2,7 @@ const http = require('http');
 const Koa = require('koa');
 const cors = require('@koa/cors');
 const bodyParser = require('koa-bodyparser');
+// const serve = require('koa-static');
 // const routes = require('./routes');
 
 const app = new Koa();
@@ -20,14 +21,25 @@ app.use(cors())
       ctx.throw('body parser error', 442)
     }
   }))
+  // .use(serve(`${__dirname}/public`));
   // .use(routes.routes())
   // .use(routes.allowedMethods());
 
 const server = http.createServer(app.callback());
 const io = require('socket.io')(server);
 io.on('connection', socket => {
+  console.log('client connection')
+  socket.emit('Hello')
   socket.on('on', data => {
     console.log(data, 'data on socket')
+    // socket.emit('on')
+  })
+  socket.on('off', data => {
+    console.log(data, 'data on socket')
+    // socket.emit('off')
+  })
+  socket.on('disconnect', () => {
+    // disconnect socket
   })
 })
 
