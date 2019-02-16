@@ -1,0 +1,66 @@
+# coverage
+coverage
+.nyc_output
+
+# yarn
+*.lock
+
+# php files
+index.php
+
+# Numerous always-ignore extensions
+*.bak
+*.patch
+*.diff
+*.err
+*.orig
+*.log
+*.rej
+*.swo
+*.swp
+*.zip
+*.vi
+*~
+*.sass-cache
+
+# OS or Editor folders
+.DS_Store
+._*
+.cache
+.project
+.settings
+.tmproj
+*.esproj
+*.sublime-project
+*.sublime-workspace
+nbproject
+thumbs.db
+.vscode/
+
+# config file
+production.json
+development.json
+test.json
+
+# key
+private.key
+public.pem
+
+# Folders to ignore
+.hg
+.svn
+.git
+.CVS
+.idea
+node_modules
+old/
+*-old/
+*-notrack/
+build/
+combo/
+reference/
+jscoverage_lib/
+temp/
+bin/
+files/
+package-lock.json
