@@ -21,29 +21,31 @@ app.use(cors())
       ctx.throw('body parser error', 442)
     }
   }))
-  // .use(serve(`${__dirname}/public`));
-  // .use(routes.routes())
-  // .use(routes.allowedMethods());
+// .use(serve(`${__dirname}/public`));
+// .use(routes.routes())
+// .use(routes.allowedMethods());
 
 const server = http.createServer(app.callback());
 const io = require('socket.io')(server);
-io.on('connection', socket => {
-  console.log('client connection')
-  socket.emit('Hello')
-  socket.on('on', data => {
-    console.log(data, 'data on socket')
-    // socket.emit('on')
+io
+  .of('/socket')
+  .on('connection', socket => {
+    console.log('client connection')
+    socket.emit('Hello')
+    socket.on('on', data => {
+      console.log(data, 'data on socket')
+      socket.emit(data)
+    })
+    socket.on('off', data => {
+      console.log(data, 'data on socket')
+      socket.emit(data)
+    })
+    socket.on('disconnect', () => {
+      // disconnect socket
+    })
   })
-  socket.on('off', data => {
-    console.log(data, 'data on socket')
-    // socket.emit('off')
-  })
-  socket.on('disconnect', () => {
-    // disconnect socket
-  })
-})
 
-server.listen(process.env.PORT|| config.port, err => {
+server.listen(process.env.PORT || config.port, err => {
   try {
     if (err) {
       console.debug('Server listen error');
