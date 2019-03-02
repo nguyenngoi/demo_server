@@ -5,6 +5,7 @@ const bodyParser = require('koa-bodyparser');
 // const serve = require('koa-static');
 // const routes = require('./routes');
 
+let status = 0;
 const app = new Koa();
 const config = {
   port: 8080,
@@ -31,14 +32,20 @@ io
   .of('/socket')
   .on('connection', socket => {
     console.log('client connection')
-    socket.emit('Hello')
+    socket.on('info', data => {
+      socket.emit('info', data)
+    })
     socket.on('on', data => {
+      status = data;
       console.log(data, 'data on socket')
-      socket.emit(data)
+      socket.emit('on', data)
+      socket.broadcast.emit('on', 1)
     })
     socket.on('off', data => {
+      status = data;
       console.log(data, 'data on socket')
-      socket.emit(data)
+      socket.emit('off', data)
+      socket.broadcast.emit('off', 0)
     })
     socket.on('disconnect', () => {
       // disconnect socket
