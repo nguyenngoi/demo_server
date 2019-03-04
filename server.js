@@ -4,8 +4,8 @@ const cors = require('@koa/cors');
 const bodyParser = require('koa-bodyparser');
 // const serve = require('koa-static');
 // const routes = require('./routes');
+const Socket = require('./socket');
 
-let status = 0;
 const app = new Koa();
 const config = {
   port: 8080,
@@ -27,30 +27,7 @@ app.use(cors())
 // .use(routes.allowedMethods());
 
 const server = http.createServer(app.callback());
-const io = require('socket.io')(server);
-io
-  .of('/socket')
-  .on('connection', socket => {
-    console.log('client connection')
-    socket.on('info', data => {
-      socket.emit('info', data)
-    })
-    socket.on('on', data => {
-      status = data;
-      console.log(data, 'data on socket')
-      socket.emit('on', data)
-      socket.broadcast.emit('on', 1)
-    })
-    socket.on('off', data => {
-      status = data;
-      console.log(data, 'data on socket')
-      socket.emit('off', data)
-      socket.broadcast.emit('off', 0)
-    })
-    socket.on('disconnect', () => {
-      // disconnect socket
-    })
-  })
+const io = new Socket(server);
 
 server.listen(process.env.PORT || config.port, err => {
   try {
