@@ -15,16 +15,18 @@ class Socket {
 
   onUdp() {
     this.dgram.on('message', (msg, remote) => {
+      const data = Buffer.from(msg).toString();
+      console.log('UDP', data)
       this.remote = remote;
-      if (msg === '?') {
+      if (data == '?') {
         const ms = new Buffer(this.status);
         this.dgram.send(ms, 0, ms.length, remote.port, remote.address, (err, bytes) => {
           if (err) throw err;
           console.log('UDP message sent to ' + remote.address + ':' + remote.port);
         })
       } else {
-        // this.status = msg;
-        this.onEvent(msg);
+        // this.status = data;
+        this.onEvent(data);
       }
     })
     this.dgram.bind(8088);
@@ -39,6 +41,7 @@ class Socket {
           this.socket.emit('info', data)
         })
         this.socket.on('message', data => {
+          console.log('SocketIo', data)
           this.onEvent(data);
         })
         this.socket.on('disconnect', () => {
@@ -52,7 +55,7 @@ class Socket {
 
     // sendback
     if (this.remote) {
-      const ms = new Buffer(msg);
+      const ms = new Buffer(data);
       this.dgram.send(ms, 0, ms.length, this.remote.port, this.remote.address, (err, bytes) => {
         if (err) throw err;
         console.log('UDP message sent to ' + this.remote.address + ':' + this.remote.port);
